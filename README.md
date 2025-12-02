@@ -1,10 +1,10 @@
 # Project Title
 
-Write a 1-2 sentences that quickly and clearly convey what your repo is for.
+This repo was created for our final project in Stat 184. It will contain all of the neccesary files and information required for the project.
 
 ## Overview
 
-Expand on those introductory sentences with a brief but informative description of your project's purpose and goals. This section should help visitors decide whether they should dig deeper into your repo/project.
+Our goal is to take the CountryData and CountryCentroids datasets, wrangle and tidy them into usable data, and create meaningful visualizations. The CountryData dataset contains 76 columns of data covering over 250 countries, and we plan to show some intersting findings that we have come across.
 
 ### Interesting Insight (Optional)
 
@@ -12,7 +12,7 @@ This is optional but highly recommended. You'll include one interesting insight 
 
 ## Data Sources and Acknowledgements
 
-Be sure to list where you got any data used within the project. Be sure to acknowledge any one whose work or elements you're drawing upon.
+We are using two datasets found in the R "dcData" library. They are the "CountryData" and "CountryCentroids" datasets.
 
 ## Current Plan
 
