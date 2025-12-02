@@ -4,7 +4,7 @@ This repo was created for our final project in Stat 184. It will contain all of 
 
 ## Overview
 
-Our goal is to take the CountryData and CountryCentroids datasets, wrangle and tidy them into usable data, and create meaningful visualizations. The CountryData dataset contains 76 columns of data covering over 250 countries, and we plan to show some intersting findings that we have come across.
+Our goal is to take the CountryData and CountryCentroids datasets, wrangle and tidy them into usable data, and create meaningful visualizations. The CountryData dataset contains 76 columns of data covering over 250 countries, and we plan to show some interesting findings that we have come across.
 
 ### Interesting Insight (Optional)
 
@@ -17,6 +17,8 @@ We are using two datasets found in the R "dcData" library. They are the "Country
 ## Current Plan
 
 Provide some information about what you intend to doe with the project. You can additionally refer the visitor to your detailed plan document.
+We plan to provide data representation that can be interpreted through the data sets and use 
+Statistics to demonstrate that
 
 ## Repo Structure
 
