@@ -15,10 +15,7 @@ This is optional but highly recommended. You'll include one interesting insight 
 We are using two datasets found in the R "dcData" library. They are the "CountryData" and "CountryCentroids" datasets.
 
 ## Current Plan
-
-Provide some information about what you intend to doe with the project. You can additionally refer the visitor to your detailed plan document.
-We plan to provide data representation that can be interpreted through the data sets and use 
-Statistics to demonstrate that
+Our current plan for this project is to load all necessary libraries and datasets, wrangle data to create cases that fit the information we are focusing on, create visualizations from the tidied data, write data stories that explain relationships between our data, use GitHub to collaborate as a group, submit project as a polished QMD file.
 
 ## Repo Structure
 
@@ -26,5 +23,4 @@ Use this section to explain the structure of your repo. This should help visitor
 
 
 ## Authors
-
-Give information about who are the authors of the project and how people can get in touch if they have questions.
+Jeremy Ijoma (jci5101@psu.edu), Max Lick (mjl6970@psu.edu), Grace Rovinsky (gwr5193@psu.edu)
