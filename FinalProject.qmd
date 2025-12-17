@@ -1,0 +1,61 @@
+---
+title: "GroupProject"
+author: "Grace Rovinsky, Max Lick, Jeremy Ijoma"
+date: "December 17, 2025"
+format: pdf
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+## Data Visualization 1
+
+```{r}
+#| echo: false
+
+```
+
+## Data Visualization 2
+
+```{r}
+#| echo: false
+
+```
+
+## FAIR and CARE Principles
+
+## FAIR
+
+findable: The data is easy to find.
+It is taken from the 2014 CIA Factbook which can be found online.
+The data is also easily accessible through the dcData package on RStudio.
+
+accessible: The datasets are open, free, and universally implementable.
+
+interoperable: The data uses a formal, accessible, shared, and broadly applicable language for knowledge representation.
+It provides a common understanding of all attributes and countries represented in the data.
+
+reusable: The data is thoroughly described with multiple relevant and accurate attributes.
+CountryData contains 76 attributes for each country, and CountryCentroids contains 4 attributes.
+
+## CARE
+
+One challenge we had with determining whether or not this data conformed to the CARE principles was assessing whether or not the datasets ignored power differentials and historical contexts related to Indigenous Peoples.
+
+collective benefit: This data includes all countries and supports use and reuse by Indigenous nations.
+It enriches potential governance and engagement of citizens as it provides all nations and communities with a clear view of each country's attributes.
+The data benefits all communities in an equitable manner.
+
+authority to control: The data is available and accessible to Indigenous Peoples.
+This way, the datasets support Indigenous governance.
+
+responsibility: When using this data, we ensured that any representation of data from Indigenous nations were respectful of the dignity of all Indigenous nations and communities.
+
+ethics: The datasets provide an accurate and fair view of all countries represented.
+This minimizes harm and maximizes benefit as it does not stigmatize Indigenous communities and represents all communities fairly.
+
+## Code Appendix
+
+```{r}
+
+```
