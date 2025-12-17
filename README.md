@@ -8,7 +8,7 @@ Our goal is to take the CountryData and CountryCentroids datasets, wrangle and t
 
 ### Interesting Insight (Optional)
 
-This is optional but highly recommended. You'll include one interesting insight from your project as part of the README. This insight is most effective when you include a visual. Keep in mind that this visual must be included as an image file (e.g., JPG, PNG, etc.). You can export plots created with `{ggplot2}` by using the function `ggsave`.
+An interesting thing that we have discovered is that there is an almost completely global lull in birth rate. When observing birth rate in comparison to the population of a country, we still see lower birth rates despite whatever the country's population may be. The only areas with higher birth rates are in most of Africa, and a small portion in the Middle East. This can be seen in the BirthRateVsPopulation image inside of this repository.
 
 ## Data Sources and Acknowledgements
 
