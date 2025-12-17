@@ -8,7 +8,7 @@ Our goal is to take the CountryData and CountryCentroids datasets, wrangle and t
 
 ### Interesting Insight (Optional)
 
-An interesting thing that we have discovered is that there is an almost completely global lull in birth rate. When observing birth rate in comparison to the population of a country, we still see lower birth rates despite whatever the country's population may be. The only areas with higher birth rates are in most of Africa, and a small portion in the Middle East. This can be seen in the BirthRateVsPopulation image inside of this repository.
+An interesting thing that we have discovered is that there is an almost completely global lull in birth rate. When observing birth rate in comparison to the population of a country, we still see lower birth rates despite whatever the country's population may be. The only areas with higher birth rates are in most of Africa, and a small portion in the Middle East. This can be seen in the PopulationBirthRate image inside of this repository. It can be found via the following link: https://github.com/Stat184-Fall2025/Sec5_FP_Max_Grace_Jeremy/blob/main/PopulationBirthRate.png
 
 ## Data Sources and Acknowledgements
 
