@@ -19,22 +19,113 @@ By displaying multivariate data visualizations and descriptive statistics using 
 
 This table includes a summary of the descriptive statistics we chose to look at for this project.
 
-```{r setup, include=FALSE}
+```{r summary-table}
 #| echo: false
+library(tidyverse) 
+library(ggplot2)
+library(ggpubr)
+library(jpeg)
+library(dcData)
+library(kableExtra)
+library(rvest)
+library(readxl)
+library(tibble)
+library(dcData)
+summary_tbl <- CountryData %>%
+  select(
+    area, pop, growth, birth, death,
+    health, obesity, educ, unemployment, life
+  ) %>%
+  psych::describe()
+
 summary_tbl
 ```
 
 ## Population vs. Birth Rate
 
-```{r setup, include=FALSE}
+```{r}
 #| echo: false
+# Upload world map image
+img <- readJPEG("/Users/gracerovinsky/Downloads/WorldMap.jpg")
+
+# Select large countries
+countries <- CountryData %>%
+  select(c(country, birth, pop)) %>%
+  filter(pop > 100000)
+
+locations <- CountryCentroids %>%
+  select(c(name, long, lat)) %>%
+  rename(country = name)
+
+dataPolished <- left_join( 
+  x = countries,
+  y = locations,
+  by = join_by(country == country)
+)
+
+# Create Population vs. Birth Rate visualization
+birth_rate <- ggplot(
+  data = dataPolished,
+  mapping = aes(
+    x = long,
+    y = lat,
+    size = pop/1000000,
+    color = birth
+  )) + 
+  background_image(img) +
+  geom_point() + 
+  coord_cartesian(xlim = c(-180,180), ylim = c(-90,90)) + 
+  scale_color_gradient(low = 'red', high = 'blue') + 
+  labs(
+    x = "Longitude",
+    y = "Latitude",
+    title = "Map of Population and Birth Rate",
+    color = "Births per 1000 People",
+  ) + 
+  guides(size = 'none')
+
 birth_rate
 ```
 
 ## Country Data by Continent
 
-```{r setup, include=FALSE}
+```{r}
 #| echo: false
+# Read Country By Continent file
+continents <- read_excel("/Users/gracerovinsky/Downloads/CountryByContinent.xlsx") %>%
+  add_row(Brazil = "Brazil", `South America` = "South America", .before = 1) %>%
+  rename(
+    "country" = "Brazil",
+    "continent" = "South America"
+  )
+
+countries <- CountryData
+
+# Tidy country data
+polished <- countries %>%
+  select(c(1:6),12,16,18,26) %>%
+  left_join(continents, by = "country") %>%
+  drop_na() %>%
+  rename("Continent" = "continent") %>%
+  group_by(Continent) %>%
+  summarise(
+    Area_mean = mean(area),
+    Pop_mean = mean(pop),
+    Growth_mean = mean(growth),
+    Birth_mean = mean(birth),
+    Death_mean = mean(death),
+    Health_mean = mean(health),
+    Obesity_mean = mean(obesity),
+    Educ_mean = mean(educ),
+    Unemployment_mean = mean(unemployment)
+  )
+
+country_by_continent <- polished %>%
+  kable( # Make table
+    caption = "Country Data Summary Statistics, Grouped By Continent", # Add title
+    align = c("l", rep("c", 6)) # Control the text alignment in each column
+  ) %>%
+  kable_classic(font_size = 16, lightable_options = "striped")
 country_by_continent
 ```
 
@@ -44,8 +135,19 @@ This plot illustrates the strong inverse relationship between the infant mortali
 Countries that invest more heavily in healthcare tend to have lower infant mortality and longer lifespans.
 This reflects real world access to medical services, emphasizing how public policy choices have a direct influence on population health outcomes.
 
-```{r setup, include=FALSE}
+```{r}
 #| echo: false
+
+# Create Health Spending, Infant Mortality, and Life Expectancy visualization
+health_visualization <- CountryData %>%
+  drop_na(infant, life, health) %>%   # Drop missing values for relevant variables
+  ggplot(aes(x = infant, y = life)) +
+  geom_point(aes(size = health), alpha = 0.7) +
+  labs(
+    title = "Health Spending and Population Health Outcomes",
+    x = "Infant Mortality Rate",
+    y = "Life Expectancy (years)",
+    size = "Health Spending")
 health_visualization
 ```
 
@@ -55,8 +157,20 @@ This plot explores macroeconomic stability by examining unemployment rates and i
 Larger economies may better absorb any economic shocks, while smaller economies often face greater volatility.
 High unemployment combined with high inflation can significantly reduce quality of life for a population and limit policy options.
 
-```{r setup, include=FALSE}
+```{r}
 #| echo: false
+
+# Create GDP, Inflation, and Unemployment visualization
+  gdp_visualization <- CountryData %>%
+  drop_na(GDP, unemployment, inflation) %>%   # Drop missing values for relevant variables
+  ggplot(aes(x = unemployment, y = inflation)) +
+  geom_point(aes(size = GDP), alpha = 0.7) +
+  labs(
+    title = "Macroeconomic Conditions by Economic Size of Country",
+    x = "Unemployment Rate",
+    y = "Inflation Rate",
+    size = "Gross Domestic Product"
+  )
 gdp_visualization
 ```
 
@@ -196,7 +310,12 @@ summary_stats <- CountryData %>%
   select(area, pop, growth, birth, death, health, obesity, educ, unemployment, life, infant, underweight) 
 
 # Create summary table for data
-summary_tbl <- psych::describe(summary_stats)
+summary_tbl <- CountryData %>%
+  select(
+    area, pop, growth, birth, death,
+    health, obesity, educ, unemployment, life
+  ) %>%
+  psych::describe()
 
 # Create Health Spending, Infant Mortality, and Life Expectancy visualization
 health_visualization <- CountryData %>%
