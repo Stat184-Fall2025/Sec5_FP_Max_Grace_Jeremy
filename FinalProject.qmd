@@ -116,7 +116,7 @@ library(tibble)
 library(dcData)
 
 # Upload world map image
-img <- readJPEG("C:/Users/pacad/Downloads/WorldMap.jpg")
+img <- readJPEG("/Users/gracerovinsky/Downloads/WorldMap.jpg")
 
 # Select large countries
 countries <- CountryData %>%
@@ -155,7 +155,7 @@ birth_rate <- ggplot(
   guides(size = 'none')
 
 # Read Country By Continent file
-continents <- read_excel("C:/Users/pacad/Downloads/CountryByContinent.xlsx") %>%
+continents <- read_excel("/Users/gracerovinsky/Downloads/CountryByContinent.xlsx") %>%
   add_row(Brazil = "Brazil", `South America` = "South America", .before = 1) %>%
   rename(
     "country" = "Brazil",
@@ -188,7 +188,7 @@ country_by_continent <- polished %>%
     caption = "Country Data Summary Statistics, Grouped By Continent", # Add title
     align = c("l", rep("c", 6)) # Control the text alignment in each column
   ) %>%
-  kable_classic(font_size = 16, lightable_options = "striped" )
+  kable_classic(font_size = 16, lightable_options = "striped")
 
 
 # Select key variables for summary
