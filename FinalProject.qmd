@@ -2,25 +2,39 @@
 title: "GroupProject"
 author: "Grace Rovinsky, Max Lick, Jeremy Ijoma"
 date: "December 17, 2025"
-format: pdf
+format: 
+  pdf:
+    toc: false
+    number-sections: true
+    number-depth: 5
+    fig-align: center
+    cap-location: top
+    geometry: 
+      - top=0.5in
+      - left=0.5in
+      - right=0.5in
+      - bottom=0.5in
+    colorlinks: true
+execute: 
+  echo: false
+  warning: false
 editor: 
   markdown: 
     wrap: sentence
 ---
 
-## Introduction
+# Introduction
 
-Understanding how demographic, economic, and health variables interact with each other is essential for evaluating the development of countries and informing future policy.
-This project uses the countryData dataset from the dcData package to conduct an exploratory data analysis of countries’ attributes such as population, education, public health, and macroeconomic conditions.
+This document outlines our exploration into many aspects of the countries around the world. To begin, we selected the Country Data dataset found in the dcData library. This data originates from the book, Data Computing (2nd edition) by Kaplan & Beckman. To complement this dataset, we used the CountryCentroids dataset from the same source. A dataset outlining which continent each country belongs to was found and also used to assist in creating more thorough analysis. This data was found at worldpopulationreview.com and is referenced in the end of the document. Understanding how demographic, economic, and health variables interact with each other is essential for evaluating the development of countries and informing future policy. Through our exploration of these datasets, we hope to discover intriguing patterns or trends that we will then share and explain throughout the rest of the document.
 We used data visualizations to identify patterns and relationships across multiple variables within our data.
 By displaying multivariate data visualizations and descriptive statistics using the tidyverse and ggplot2 packages, we highlighted how complex attributes such as population growth, economic stability, and health are shaped by many connected factors.
 
-## Summary Table
+# Summary Table
 
 This table includes a summary of the descriptive statistics we chose to look at for this project.
 
-```{r summary-table}
-#| echo: false
+```{r sum_tbl}
+# Load all necessary packages
 library(tidyverse) 
 library(ggplot2)
 library(ggpubr)
@@ -31,22 +45,32 @@ library(rvest)
 library(readxl)
 library(tibble)
 library(dcData)
-summary_tbl <- CountryData %>%
-  select(
-    area, pop, growth, birth, death,
-    health, obesity, educ, unemployment, life
-  ) %>%
-  psych::describe()
+# Select key variables for summary
+summary_stats <- CountryData %>%
+  select(area, pop, growth, birth, death, health, obesity, educ, unemployment, life, infant, underweight) 
 
+# Create summary table for data
+summary_tbl <- psych::describe(summary_stats)
 summary_tbl
 ```
 
-## Population vs. Birth Rate
+# Population vs. Birth Rate
 
-```{r}
-#| echo: false
+```{r birth_rate}
+## Author: Max Lick
+# Load all necessary packages
+library(tidyverse) 
+library(ggplot2)
+library(ggpubr)
+library(jpeg)
+library(dcData)
+library(kableExtra)
+library(rvest)
+library(readxl)
+library(tibble)
+library(dcData)
 # Upload world map image
-img <- readJPEG("/Users/gracerovinsky/Downloads/WorldMap.jpg")
+img <- readJPEG("/Users/pacad/Downloads/WorldMap.jpg")
 
 # Select large countries
 countries <- CountryData %>%
@@ -83,16 +107,27 @@ birth_rate <- ggplot(
     color = "Births per 1000 People",
   ) + 
   guides(size = 'none')
-
 birth_rate
 ```
+This map provides a look into how population and birth rate are related from country to country. As the map shows, population does not seem to affect birth rate much, or vice versa. However, we do notice that, although some countries have larger populations, their birth rate is very similar to that of the lesser populated countries. The only areas of higher population seem to be in Africa and a small portion of the Middle East.
 
-## Country Data by Continent
+# Country Data by Continent
 
-```{r}
-#| echo: false
+```{r ctry_by_cont}
+## Author: Max Lick
+# Load all necessary packages
+library(tidyverse) 
+library(ggplot2)
+library(ggpubr)
+library(jpeg)
+library(dcData)
+library(kableExtra)
+library(rvest)
+library(readxl)
+library(tibble)
+library(dcData)
 # Read Country By Continent file
-continents <- read_excel("/Users/gracerovinsky/Downloads/CountryByContinent.xlsx") %>%
+continents <- read_excel("C:/Users/pacad/Downloads/CountryByContinent.xlsx") %>%
   add_row(Brazil = "Brazil", `South America` = "South America", .before = 1) %>%
   rename(
     "country" = "Brazil",
@@ -101,43 +136,73 @@ continents <- read_excel("/Users/gracerovinsky/Downloads/CountryByContinent.xlsx
 
 countries <- CountryData
 
-# Tidy country data
 polished <- countries %>%
   select(c(1:6),12,16,18,26) %>%
   left_join(continents, by = "country") %>%
   drop_na() %>%
-  rename("Continent" = "continent") %>%
+  rename("Continent" = "continent")
+
+table1 <- polished %>%
   group_by(Continent) %>%
   summarise(
     Area_mean = mean(area),
     Pop_mean = mean(pop),
     Growth_mean = mean(growth),
     Birth_mean = mean(birth),
-    Death_mean = mean(death),
+    Death_mean = mean(death)
+    )
+
+table2 <- polished %>%
+  group_by(Continent) %>%
+  summarise(
     Health_mean = mean(health),
     Obesity_mean = mean(obesity),
     Educ_mean = mean(educ),
     Unemployment_mean = mean(unemployment)
   )
 
-country_by_continent <- polished %>%
-  kable( # Make table
-    caption = "Country Data Summary Statistics, Grouped By Continent", # Add title
+table1 %>%
+  kable( # Make Pretty Table
+    caption = "Country Data Summary Statistics, Grouped By Continent", # Add Title
     align = c("l", rep("c", 6)) # Control the text alignment in each column
   ) %>%
-  kable_classic(font_size = 16, lightable_options = "striped")
-country_by_continent
-```
+  kable_classic( # Pre-built styling
+    font_size = 12, # Control Font Size
+    lightable_options = "striped" # Adds striping in a pre-built table style
+  )
 
-## Health Spending, Life Expectancy, Infant Mortality
+table2 %>%
+  kable( # Make Pretty Table
+    caption = "Country Data Summary Statistics, Grouped By Continent, cont'd", # Add Title
+    align = c("l", rep("c", 6)) # Control the text alignment in each column
+  ) %>%
+  kable_classic( # Pre-built styling
+    font_size = 12, # Control Font Size
+    lightable_options = "striped" # Adds striping in a pre-built table style
+  )
+```
+The above tables use the same grouping system, but had to be separated in order to fit onto the page. The tables show mean values of all countries in each continent for nine different attributes. These include area, population, growth rate, birth rate, death rate, health, obesity, education, and unemployment. These values give us an overview of the patterns occurring across the continents and can help us make assumptions at the continent level.
+```
+The table shows mean values of all countries in each continent for nine different attributes. These include area, population, growth rate, birth rate, death rate, health, obesity, education, and unemployment. These values give us an overview of the patterns occurring across the continents and can help us make assumptions at the continent level. Something to observe is how continents that tend to have higher population or growth rate also seem to have worse health standards.
+
+# Health Spending, Life Expectancy, Infant Mortality
 
 This plot illustrates the strong inverse relationship between the infant mortality rate and life expectancy of a country, incorporating health spending.
 Countries that invest more heavily in healthcare tend to have lower infant mortality and longer lifespans.
 This reflects real world access to medical services, emphasizing how public policy choices have a direct influence on population health outcomes.
 
-```{r}
-#| echo: false
-
+```{r health}
+# Load all necessary packages
+library(tidyverse) 
+library(ggplot2)
+library(ggpubr)
+library(jpeg)
+library(dcData)
+library(kableExtra)
+library(rvest)
+library(readxl)
+library(tibble)
+library(dcData)
 # Create Health Spending, Infant Mortality, and Life Expectancy visualization
 health_visualization <- CountryData %>%
   drop_na(infant, life, health) %>%   # Drop missing values for relevant variables
@@ -151,15 +216,24 @@ health_visualization <- CountryData %>%
 health_visualization
 ```
 
-## GDP, Unemployment, Inflation
+# GDP, Unemployment, Inflation
 
 This plot explores macroeconomic stability by examining unemployment rates and inflation, with GDP representing the overall economic scale of a country.
 Larger economies may better absorb any economic shocks, while smaller economies often face greater volatility.
 High unemployment combined with high inflation can significantly reduce quality of life for a population and limit policy options.
 
-```{r}
-#| echo: false
-
+```{r gdp}
+# Load all necessary packages
+library(tidyverse) 
+library(ggplot2)
+library(ggpubr)
+library(jpeg)
+library(dcData)
+library(kableExtra)
+library(rvest)
+library(readxl)
+library(tibble)
+library(dcData)
 # Create GDP, Inflation, and Unemployment visualization
   gdp_visualization <- CountryData %>%
   drop_na(GDP, unemployment, inflation) %>%   # Drop missing values for relevant variables
@@ -171,10 +245,10 @@ High unemployment combined with high inflation can significantly reduce quality 
     y = "Inflation Rate",
     size = "Gross Domestic Product"
   )
-gdp_visualization
+  gdp_visualization
 ```
 
-## FAIR and CARE Principles
+# FAIR and CARE Principles
 
 ## FAIR
 
@@ -206,7 +280,7 @@ responsibility: When using this data, we ensured that any representation of data
 ethics: The datasets provide an accurate and fair view of all countries represented.
 This minimizes harm and maximizes benefit as it does not stigmatize Indigenous communities and represents all communities fairly.
 
-## Conclusion
+# Conclusion
 
 Through multivariate visualizations and descriptive statistics, this exploratory data analysis reveals clear and consistent relationships among attributes of countries.
 The results suggest that investments in healthcare and education are strongly associated with improved life expectancy, reduced infant mortality, and greater countrywide stability.
@@ -214,130 +288,17 @@ Macroeconomic patterns such as unemployment and inflation vary with the economic
 Our findings do not suggest complete causation, but they generate hypotheses for potential confirmatory data analysis.
 The data analysis emphasizes the value of looking into multiple variables when interpreting nationwide outcomes and establishes the role of data visualization as a powerful tool for understanding complex systems.
 
+{{< pagebreak >}}
+## Citations
+Kaplan, D. (2021, January 19). Data Computing (2nd edition). Github.io. https://dtkaplan.github.io/
+DataComputingEbook/
+
+World Population Review. (2025, December 12). List of Countries by Continent. World Population Review.            https://worldpopulationreview.com/country-rankings/list-of-countries-by-continent
+
+{{< pagebreak >}}
+
 ## Code Appendix
 
-```{r}
-# Load all necessary packages
-library(tidyverse) 
-library(ggplot2)
-library(ggpubr)
-library(jpeg)
-library(dcData)
-library(kableExtra)
-library(rvest)
-library(readxl)
-library(tibble)
-library(dcData)
-
-# Upload world map image
-img <- readJPEG("/Users/gracerovinsky/Downloads/WorldMap.jpg")
-
-# Select large countries
-countries <- CountryData %>%
-  select(c(country, birth, pop)) %>%
-  filter(pop > 100000)
-
-locations <- CountryCentroids %>%
-  select(c(name, long, lat)) %>%
-  rename(country = name)
-
-dataPolished <- left_join( 
-  x = countries,
-  y = locations,
-  by = join_by(country == country)
-)
-
-# Create Population vs. Birth Rate visualization
-birth_rate <- ggplot(
-  data = dataPolished,
-  mapping = aes(
-    x = long,
-    y = lat,
-    size = pop/1000000,
-    color = birth
-  )) + 
-  background_image(img) +
-  geom_point() + 
-  coord_cartesian(xlim = c(-180,180), ylim = c(-90,90)) + 
-  scale_color_gradient(low = 'red', high = 'blue') + 
-  labs(
-    x = "Longitude",
-    y = "Latitude",
-    title = "Map of Population and Birth Rate",
-    color = "Births per 1000 People",
-  ) + 
-  guides(size = 'none')
-
-# Read Country By Continent file
-continents <- read_excel("/Users/gracerovinsky/Downloads/CountryByContinent.xlsx") %>%
-  add_row(Brazil = "Brazil", `South America` = "South America", .before = 1) %>%
-  rename(
-    "country" = "Brazil",
-    "continent" = "South America"
-  )
-
-countries <- CountryData
-
-# Tidy country data
-polished <- countries %>%
-  select(c(1:6),12,16,18,26) %>%
-  left_join(continents, by = "country") %>%
-  drop_na() %>%
-  rename("Continent" = "continent") %>%
-  group_by(Continent) %>%
-  summarise(
-    Area_mean = mean(area),
-    Pop_mean = mean(pop),
-    Growth_mean = mean(growth),
-    Birth_mean = mean(birth),
-    Death_mean = mean(death),
-    Health_mean = mean(health),
-    Obesity_mean = mean(obesity),
-    Educ_mean = mean(educ),
-    Unemployment_mean = mean(unemployment)
-  )
-
-country_by_continent <- polished %>%
-  kable( # Make table
-    caption = "Country Data Summary Statistics, Grouped By Continent", # Add title
-    align = c("l", rep("c", 6)) # Control the text alignment in each column
-  ) %>%
-  kable_classic(font_size = 16, lightable_options = "striped")
-
-
-# Select key variables for summary
-summary_stats <- CountryData %>%
-  select(area, pop, growth, birth, death, health, obesity, educ, unemployment, life, infant, underweight) 
-
-# Create summary table for data
-summary_tbl <- CountryData %>%
-  select(
-    area, pop, growth, birth, death,
-    health, obesity, educ, unemployment, life
-  ) %>%
-  psych::describe()
-
-# Create Health Spending, Infant Mortality, and Life Expectancy visualization
-health_visualization <- CountryData %>%
-  drop_na(infant, life, health) %>%   # Drop missing values for relevant variables
-  ggplot(aes(x = infant, y = life)) +
-  geom_point(aes(size = health), alpha = 0.7) +
-  labs(
-    title = "Health Spending and Population Health Outcomes",
-    x = "Infant Mortality Rate",
-    y = "Life Expectancy (years)",
-    size = "Health Spending")
-
-# Create GDP, Inflation, and Unemployment visualization
-  gdp_visualization <- CountryData %>%
-  drop_na(GDP, unemployment, inflation) %>%   # Drop missing values for relevant variables
-  ggplot(aes(x = unemployment, y = inflation)) +
-  geom_point(aes(size = GDP), alpha = 0.7) +
-  labs(
-    title = "Macroeconomic Conditions by Economic Size of Country",
-    x = "Unemployment Rate",
-    y = "Inflation Rate",
-    size = "Gross Domestic Product"
-  )
+```{r codeAppend, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
 
 ```
